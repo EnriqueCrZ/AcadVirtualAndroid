@@ -42,7 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_STUDENT_PICTURE + " BLOB)");
         db.execSQL("CREATE TABLE " + TABLE_INSCRIPCION + " (" + COLUMN_ID2 + " INTEGER PRIMARY KEY AUTOINCREMENT,"
         + COLUMN_CARNE + " TEXT, "
-        + COLUMN_DATE + " DATE)");
+        + COLUMN_DATE + " DATE, "
+        + COLUMN_STUDENT + " INTEGER)");
     }
 
     @Override
@@ -81,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    long updateData(String row_id, String title, String author, String pages) {
+    long updateData(String row_id, String title, String author, byte[] pages) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_STUDENT_NAME, title);

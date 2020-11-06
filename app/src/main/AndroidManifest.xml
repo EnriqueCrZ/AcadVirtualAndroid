@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Design">
         <activity
             android:name=".UpdateActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".Student" />
         <activity
             android:name=".Student"
             android:label="Estudiante"

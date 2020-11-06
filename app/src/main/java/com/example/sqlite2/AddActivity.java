@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -63,6 +62,7 @@ public class AddActivity extends AppCompatActivity {
                 else{
                     title_input.setText("");
                     author_input.setText("");
+                    imageView.setImageResource(0);
                     //Toast.makeText(context,"Agregado exitosamente",Toast.LENGTH_SHORT).show();
                 }
             }
