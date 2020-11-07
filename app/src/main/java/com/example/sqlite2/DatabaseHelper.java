@@ -10,6 +10,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
     public static final String DATABASE_NAME = "Academia.db";
@@ -42,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_STUDENT_PICTURE + " BLOB)");
         db.execSQL("CREATE TABLE " + TABLE_INSCRIPCION + " (" + COLUMN_ID2 + " INTEGER PRIMARY KEY AUTOINCREMENT,"
         + COLUMN_CARNE + " TEXT, "
-        + COLUMN_DATE + " DATE, "
+        + COLUMN_DATE + " TEXT, "
         + COLUMN_STUDENT + " INTEGER)");
     }
 
@@ -82,6 +87,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public String[] readAllDataArray(){
+
+        String selectQuery = "select * from " + TABLE_STUDENT;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery,null);
+
+        ArrayList<String> spinnerContent = new ArrayList<String>();
+
+        if(cursor.moveToFirst()){
+            do{
+                spinnerContent.add(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID)) + " - " + cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STUDENT_NAME)) + " " + cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STUDENT_LAST)));
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        String[] allSpinner = new String[spinnerContent.size()];
+
+        return spinnerContent.toArray(allSpinner);
+    }
+
     long updateData(String row_id, String title, String author, byte[] pages) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -116,4 +144,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_STUDENT);
     }
+
+    //Inscripcion
+    public long addIns(String carne, String date, String id_alumno) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_CARNE, carne);
+        cv.put(COLUMN_DATE, String.valueOf(date));
+        cv.put(COLUMN_STUDENT, id_alumno);
+
+        long result = db.insert(TABLE_INSCRIPCION, null, cv);
+
+        if (result == -1)
+            Toast.makeText(context, "Fallo en agregar registro", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, "Inscrito exitosamente", Toast.LENGTH_SHORT).show();
+
+        return result;
+    }
+
+    public Cursor readAllDataIns() {
+        String query = "SELECT * FROM " + TABLE_INSCRIPCION;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null)
+            cursor = db.rawQuery(query, null);
+
+        return cursor;
+    }
+
+    public String studentName(String id){
+        String query = "SELECT " + COLUMN_STUDENT_NAME + " FROM " + TABLE_STUDENT + " WHERE " + COLUMN_ID + " = " + id;
+        String student_name = "";
+        Log.d(student_name,"false");
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(query,null);
+
+        if(c.getCount() == 1){
+            c.moveToFirst();
+            student_name = c.getString(0);
+        }
+        c.close();
+        return student_name;
+    }
+
+    byte[] studentPicture(String id){
+        String query = "SELECT " + DatabaseHelper.COLUMN_STUDENT_PICTURE + " FROM " + DatabaseHelper.TABLE_STUDENT + " WHERE " + DatabaseHelper.COLUMN_ID + " = " + id;
+        byte[] student_pic = new byte[0];
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(query,null);
+
+
+        if(c.getCount() == 1){
+            c.moveToFirst();
+            student_pic = c.getBlob(0);
+        }
+        c.close();
+        return student_pic;
+    }
+
 }

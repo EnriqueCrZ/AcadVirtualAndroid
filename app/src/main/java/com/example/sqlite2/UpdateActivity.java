@@ -109,13 +109,14 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     void getAndSetIntentData(){
-        if(getIntent().hasExtra("id") && getIntent().hasExtra("title") && getIntent().hasExtra("author") && getIntent().hasExtra("pages")){
+        if(getIntent().hasExtra("id") && getIntent().hasExtra("title") && getIntent().hasExtra("author")){
+            DatabaseHelper myDB = new DatabaseHelper(UpdateActivity.this);
             id = getIntent().getStringExtra("id");
             title = getIntent().getStringExtra("title");
             author = getIntent().getStringExtra("author");
-            image_uri = getIntent().getStringExtra("pages");
 
-            byte[] image = Base64.decode(image_uri,Base64.DEFAULT);
+            byte[] image = myDB.studentPicture(id);
+            myDB.close();
             Bitmap bitmap = BitmapFactory.decodeByteArray(image,0,image.length);
 
             title_input.setText(title);

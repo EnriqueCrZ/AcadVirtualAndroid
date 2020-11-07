@@ -18,12 +18,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.sqlite2.inscripcion.Inscripcion;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    Button students;
+    Button students, inscription;
 
 
 
@@ -34,10 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         students = findViewById(R.id.btn_students);
+        inscription = findViewById(R.id.button);
         students.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,Student.class);
+                startActivity(intent);
+            }
+        });
+        inscription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Inscripcion.class);
                 startActivity(intent);
             }
         });
